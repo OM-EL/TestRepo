@@ -4,7 +4,6 @@ import com.example.fieldwire.dto.ProjectDto;
 import com.example.fieldwire.mapper.ProjectMapper;
 import com.example.fieldwire.model.Project;
 import com.example.fieldwire.repository.ProjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

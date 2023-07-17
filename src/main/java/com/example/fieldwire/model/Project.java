@@ -1,5 +1,6 @@
 package com.example.fieldwire.model;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import java.util.List;
 
@@ -17,4 +18,7 @@ public class Project {
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Floorplan> floorplans;
+
+    public Project() {
+    }
 }

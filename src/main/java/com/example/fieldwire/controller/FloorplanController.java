@@ -1,6 +1,8 @@
 package com.example.fieldwire.controller;
 import com.example.fieldwire.dto.FloorplanDto;
 import com.example.fieldwire.service.FloorplanService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/floorplans")
+@RequestMapping("/api/v1/floorplans")
 public class FloorplanController {
+
     private final FloorplanService floorplanService;
 
     public FloorplanController(FloorplanService floorplanService) {
@@ -17,27 +20,28 @@ public class FloorplanController {
     }
 
     @GetMapping
-    public List<FloorplanDto> getAllFloorplans() {
-        return floorplanService.getAllFloorplans();
+    public ResponseEntity<List<FloorplanDto>> getAllFloorplans() {
+        return new ResponseEntity<>(floorplanService.getAllFloorplans(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public FloorplanDto getFloorplanById(@PathVariable Long id) {
-        return floorplanService.getFloorplanById(id);
+    public ResponseEntity<FloorplanDto> getFloorplanById(@PathVariable Long id) {
+        return new ResponseEntity<>(floorplanService.getFloorplanById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public FloorplanDto createFloorplan(@RequestBody FloorplanDto floorplanDto) {
-        return floorplanService.createFloorplan(floorplanDto);
+    public ResponseEntity<FloorplanDto> createFloorplan(@RequestBody FloorplanDto floorplanDto) {
+        return new ResponseEntity<>(floorplanService.createFloorplan(floorplanDto), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteFloorplan(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFloorplan(@PathVariable Long id) {
         floorplanService.deleteFloorplan(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{id}")
-    public FloorplanDto updateFloorplan(@PathVariable Long id, @RequestBody FloorplanDto floorplanDto) {
-        return floorplanService.updateFloorplan(id, floorplanDto);
+    public ResponseEntity<FloorplanDto> updateFloorplan(@PathVariable Long id, @RequestBody FloorplanDto floorplanDto) {
+        return new ResponseEntity<>(floorplanService.updateFloorplan(id, floorplanDto), HttpStatus.OK);
     }
 }

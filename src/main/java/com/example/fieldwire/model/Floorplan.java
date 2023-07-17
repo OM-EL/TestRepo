@@ -18,4 +18,7 @@ public class Floorplan {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    public Floorplan() {
+    }
 }
