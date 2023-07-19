@@ -3,7 +3,6 @@ package com.example.fieldwire.service;
 import com.example.fieldwire.dto.ProjectDto;
 import com.example.fieldwire.mapper.ProjectMapper;
 import com.example.fieldwire.model.Project;
-import com.example.fieldwire.repository.FloorplanRepository;
 import com.example.fieldwire.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,9 +40,11 @@ public class ProjectService {
     @Transactional
     public ProjectDto createProject(ProjectDto projectDto) {
         Project project = projectMapper.toEntity(projectDto);
-        if(project.getId() != null && projectRepository.findById(project.getId()).isPresent()) {
-            throw new RuntimeException(PROJECT_WITH_ID + project.getId() + " already exists");
+
+        if( project.getId() != null ) {
+            throw new RuntimeException(" you can not provide an ID when creating the Project" );
         }
+
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
     }

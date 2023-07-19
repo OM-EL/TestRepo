@@ -1,5 +1,6 @@
 package com.example.fieldwire.service;
 import com.example.fieldwire.dto.FloorplanDto;
+import com.example.fieldwire.exceptions.ResourceNotFoundException;
 import com.example.fieldwire.mapper.FloorplanMapper;
 import com.example.fieldwire.model.Floorplan;
 import com.example.fieldwire.repository.FloorplanRepository;
@@ -43,8 +44,13 @@ public class FloorplanService {
 
     @Transactional
     public FloorplanDto createFloorplan(FloorplanDto floorplanDto , MultipartFile file) {
-        if(floorplanDto.getId() != null && !projectRepository.existsById(floorplanDto.getProjectId())) {
-            throw new IllegalArgumentException("Invalid project id");
+
+        if( !projectRepository.existsById(floorplanDto.getProjectId())) {
+            throw new ResourceNotFoundException("Invalid project id");
+        }
+
+        if( floorplanDto.getId() != null ) {
+            throw new RuntimeException(" you can not provide an ID when creating the Floorplan" );
         }
         String original = cloudStorageService.uploadFile(file);
         String thumb = cloudStorageService.getFileThumbUrl(file);
