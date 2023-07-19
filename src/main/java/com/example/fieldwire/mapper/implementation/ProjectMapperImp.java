@@ -29,7 +29,7 @@ public class ProjectMapperImp implements ProjectMapper {
         }
 
         Project project = new Project();
-        project.setId(dto.getId());
+        project.setId(dto.getId() );
         project.setName(dto.getName());
         project.setFloorplans(new ArrayList<>());  // Assuming you want a new list here.
 

@@ -1,5 +1,6 @@
 package com.example.fieldwire.service;
 
+import com.example.fieldwire.service.interfaces.CloudStorageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -7,9 +8,8 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
-
 @Service
-public class S3Service {
+public class S3Service implements CloudStorageService {
 
     @Value("${aws.s3.bucket.original}")
     private String uploadBucketName;
@@ -36,7 +36,7 @@ public class S3Service {
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             return getFileUrl(uploadBucketName, file.getOriginalFilename());
         } catch (Exception e) {
-            throw new RuntimeException("Failed to upload file to S3", e);
+            throw new RuntimeException("Failed to upload file", e);
         }
     }
 
@@ -45,15 +45,19 @@ public class S3Service {
             s3Client.deleteObject(DeleteObjectRequest.builder().bucket(uploadBucketName).key(fileName).build());
             return true;
         } catch (Exception e) {
-            return false;
+            throw new RuntimeException("Failed to delete file", e);
         }
     }
 
     public String getFileUrl(String bucketName, String fileName) {
-        return s3Client.utilities().getUrl(GetUrlRequest.builder()
-                .bucket(bucketName)
-                .key(fileName)
-                .build()).toString();
+        try {
+            return s3Client.utilities().getUrl(GetUrlRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .build()).toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to access file", e);
+        }
     }
 
     public String getFileThumbUrl( MultipartFile file) {

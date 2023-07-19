@@ -2,6 +2,8 @@ package com.example.fieldwire.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.UUID;
+
 
 @Entity
 @Data
@@ -9,7 +11,7 @@ import lombok.Data;
 public class Floorplan {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    private UUID id;
 
     private String name;
     private String original;

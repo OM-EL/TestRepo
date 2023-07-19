@@ -8,20 +8,20 @@ import com.example.fieldwire.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
+
 
 @Service
 public class ProjectService {
+    public static final String PROJECT_WITH_ID = "Project with ID ";
     private final ProjectRepository projectRepository;
-
-    private final FloorplanRepository floorplanRepository;
 
     private final FloorplanService floorplanService;
     private final ProjectMapper projectMapper;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper, FloorplanRepository floorplanRepository , FloorplanService floorplanService) {
+    public ProjectService(ProjectRepository projectRepository, ProjectMapper projectMapper, FloorplanService floorplanService) {
         this.projectRepository = projectRepository;
         this.projectMapper = projectMapper;
-        this.floorplanRepository = floorplanRepository;
         this.floorplanService = floorplanService;
     }
 
@@ -32,33 +32,33 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public ProjectDto getProjectById(Long id) {
+    public ProjectDto getProjectById(UUID id) {
         Project project = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new RuntimeException(PROJECT_WITH_ID + id + " not found"));
         return projectMapper.toDto(project);
     }
 
     @Transactional
     public ProjectDto createProject(ProjectDto projectDto) {
         Project project = projectMapper.toEntity(projectDto);
-        if(projectRepository.findById(project.getId()).isPresent()) {
-            throw new RuntimeException("id Already in use ");
+        if(project.getId() != null && projectRepository.findById(project.getId()).isPresent()) {
+            throw new RuntimeException(PROJECT_WITH_ID + project.getId() + " already exists");
         }
         project = projectRepository.save(project);
         return projectMapper.toDto(project);
     }
 
     @Transactional
-    public void deleteProject(Long id) {
-        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+    public void deleteProject(UUID id) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException(PROJECT_WITH_ID + id + " not found"));
         project.getFloorplans().forEach( plan -> floorplanService.deleteFloorplan(plan.getId()) );
         projectRepository.deleteById(id);
     }
 
     @Transactional
-    public ProjectDto updateProject(Long id, ProjectDto projectDto) {
+    public ProjectDto updateProject(UUID id, ProjectDto projectDto) {
         Project existingProject = projectRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project not found"));
+                .orElseThrow(() -> new RuntimeException(PROJECT_WITH_ID + id + " not found"));
         existingProject.setName(projectDto.getName());
         projectRepository.save(existingProject);
         return projectMapper.toDto(existingProject);

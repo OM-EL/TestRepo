@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/floorplans")
 public class FloorplanController {
@@ -22,12 +22,12 @@ public class FloorplanController {
 
     @GetMapping
     public ResponseEntity<List<FloorplanDto>> getAllFloorplans() {
-        return new ResponseEntity<>(floorplanService.getAllFloorplans(), HttpStatus.OK);
+        return ResponseEntity.ok(floorplanService.getAllFloorplans());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FloorplanDto> getFloorplanById(@PathVariable Long id) {
-        return new ResponseEntity<>(floorplanService.getFloorplanById(id), HttpStatus.OK);
+    public ResponseEntity<FloorplanDto> getFloorplanById(@PathVariable UUID id) {
+        return ResponseEntity.ok(floorplanService.getFloorplanById(id));
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
@@ -37,15 +37,15 @@ public class FloorplanController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFloorplan(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteFloorplan(@PathVariable UUID id) {
         floorplanService.deleteFloorplan(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FloorplanDto> updateFloorplan(@PathVariable Long id,
+    public ResponseEntity<FloorplanDto> updateFloorplan(@PathVariable UUID id,
                                                         @RequestPart("floorplan") FloorplanDto floorplanDto,
                                                         @RequestPart("file") MultipartFile file) {
-        return new ResponseEntity<>(floorplanService.updateFloorplan(id, floorplanDto, file), HttpStatus.OK);
+        return ResponseEntity.ok(floorplanService.updateFloorplan(id, floorplanDto, file));
     }
 }
