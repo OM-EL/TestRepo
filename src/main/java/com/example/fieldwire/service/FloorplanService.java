@@ -65,10 +65,7 @@ public class FloorplanService {
 
     @Transactional
     public void deleteFloorplan(UUID id) {
-        Floorplan floorplan = floorplanRepository.findById(id).orElseThrow(() -> new RuntimeException(FLOORPLAN_NOT_FOUND));
-        cloudStorageService.deleteFile(floorplan.getOriginal());
-        cloudStorageService.deleteFile(floorplan.getThumb());
-        cloudStorageService.deleteFile(floorplan.getLarge());
+        floorplanRepository.findById(id).orElseThrow(() -> new RuntimeException(FLOORPLAN_NOT_FOUND));
         floorplanRepository.deleteById(id);
     }
 
