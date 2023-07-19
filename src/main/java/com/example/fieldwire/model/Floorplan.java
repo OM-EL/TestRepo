@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
+
 public class Floorplan {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -18,7 +19,4 @@ public class Floorplan {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
-
-    public Floorplan() {
-    }
 }

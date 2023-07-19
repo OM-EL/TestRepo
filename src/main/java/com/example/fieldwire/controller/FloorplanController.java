@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,9 +30,10 @@ public class FloorplanController {
         return new ResponseEntity<>(floorplanService.getFloorplanById(id), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<FloorplanDto> createFloorplan(@RequestBody FloorplanDto floorplanDto) {
-        return new ResponseEntity<>(floorplanService.createFloorplan(floorplanDto), HttpStatus.CREATED);
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<FloorplanDto> createFloorplan(@RequestPart("floorplan") FloorplanDto floorplanDto,
+                                                        @RequestPart("file") MultipartFile file) {
+        return new ResponseEntity<>(floorplanService.createFloorplan(floorplanDto, file), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -41,7 +43,9 @@ public class FloorplanController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<FloorplanDto> updateFloorplan(@PathVariable Long id, @RequestBody FloorplanDto floorplanDto) {
-        return new ResponseEntity<>(floorplanService.updateFloorplan(id, floorplanDto), HttpStatus.OK);
+    public ResponseEntity<FloorplanDto> updateFloorplan(@PathVariable Long id,
+                                                        @RequestPart("floorplan") FloorplanDto floorplanDto,
+                                                        @RequestPart("file") MultipartFile file) {
+        return new ResponseEntity<>(floorplanService.updateFloorplan(id, floorplanDto, file), HttpStatus.OK);
     }
 }
